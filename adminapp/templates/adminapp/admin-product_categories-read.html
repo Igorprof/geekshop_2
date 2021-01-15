@@ -1,0 +1,82 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+<h1 class="mt-4">Категории товаров</h1>
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table mr-1"></i>
+        Категории
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Название категории</th>
+                    <th>Описание</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Название категории</th>
+                    <th>Описание</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for product_category in object_list %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin_staff:admin_product_categories_update' product_category.id %}" style="color: dodgerblue">
+                                {{ product_category.name }}
+                            </a>
+                        </td>
+                        <td>{{ product_category.description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <ul class="pagination">
+        <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %} ">
+            <a class="page-link"
+               href="
+                    {% if not page_obj.has_previous %}
+                    #
+                    {% else %}
+                    {% url 'admin_staff:admin_product_categories' %}?page={{ page_obj.previous_page_number }}
+                    {% endif %}">
+                Предыдущая
+            </a>
+        </li>
+        {% for page in page_obj.paginator.page_range %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{% url 'admin_staff:admin_product_categories' %}?page={{ page }}">{{ page }}
+                </a>
+            </li>
+        {% endfor %}
+        <li class="page-item {% if not page_obj.has_next %} disabled {% endif %} ">
+            <a class="page-link"
+               href="
+                    {% if not page_obj.has_next %}
+                    #
+                    {% else %}
+                    {% url 'admin_staff:admin_product_categories' %}?page={{ page_obj.next_page_number }} {% endif %}">
+                Следующая
+            </a>
+        </li>
+    </ul>
+    {% endif %}
+
+    <div class="card-footer">
+        <button class="btn btn-success">
+            <a href="{% url 'admin_staff:admin_product_categories_create' %}" style="color: white;">
+                Создать категорию
+            </a>
+        </button>
+    </div>
+</div>
+{% endblock %}
