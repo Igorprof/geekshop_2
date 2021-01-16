@@ -1,9 +1,34 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
+from django.conf import settings
+from django.core.mail import send_mail
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from authapp.models import User
 from basketapp.models import Basket
+
+def send_verify_email(user):
+    verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
+
+    subject = f'Подтверждение учетной записи {user.username}'
+    message = f'Для подтверждения перейдите по ссылке {settings.DOMAIN}/{verify_link}'
+
+    return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+def verify(request, email, activation_key):
+    try:
+        user = User.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.activation_key = None
+            user.save()
+            auth.login(request, user)
+        return render(request, 'authapp/verification.html')
+    except Exception as ex:
+        return HttpResponseRedirect(reverse('main'))
+
+
 
 def login(request):
     if request.method == 'POST':
@@ -27,8 +52,9 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(data=request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Вы успешно зарегистрировались!')
+            user = form.save()
+            send_verify_email(user)
+            messages.success(request, 'Письмо с кодом активации отправлено вам на почту')
             return HttpResponseRedirect(reverse('authapp:login'))
     else:
         form = UserRegisterForm()    
@@ -46,10 +72,8 @@ def profile(request):
     else:
         form = UserProfileForm(instance=request.user)
     
-    baskets = Basket.objects.filter(user=request.user)
     context = {
-        'form': form,
-        'baskets': baskets
+        'form': form
     }
 
     return render(request, 'authapp/profile.html', context)
