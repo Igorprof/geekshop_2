@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 
-from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, ShopUserProfileForm
 from authapp.models import User
 from basketapp.models import Basket
 
@@ -66,14 +66,17 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
-        if form.is_valid():
+        profile_form = ShopUserProfileForm(data=request.POST, instance=request.user.shopuserprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('authapp:profile'))
     else:
         form = UserProfileForm(instance=request.user)
-    
+        profile_form = ShopUserProfileForm(instance=request.user.shopuserprofile)
+
     context = {
-        'form': form
+        'form': form,
+        'profile_form': profile_form
     }
 
     return render(request, 'authapp/profile.html', context)
