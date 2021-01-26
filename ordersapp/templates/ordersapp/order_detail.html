@@ -1,0 +1,50 @@
+{% extends 'ordersapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}   
+   <!-- <div class="basket_list">
+    {% for item in object.orderitems.select_related %}
+        <div class="basket_record">
+            
+            <span class="category_name">
+                {{ item.product.category.name }}
+            </span>
+            <span class="product_name">{{ item.product.name }}</span>
+            <span class="product_price">
+                {{ item.product.price }}&nbspруб
+            </span>
+            <span class="product_quantitiy">
+                x {{ item.quantity }} шт.
+            </span>
+            <span class="product_cost">
+                 = {{ item.get_product_cost }}&nbspруб
+            </span>
+        </div>
+    {% endfor %}
+</div> -->
+    {% include 'ordersapp/includes/inc_order_summary.html' %}
+   <table class="table">
+    {% for item in object.orderitems.select_related %}        
+        <tr class="formset_row">                    
+            <td class="order formset_td">
+                <img class="card-img-top" src="/media/{{ item.product.image }}" alt="">
+            </td>  
+   
+            <td class="order formset_td">
+                {{ item.product.category.name }}
+            </td>   
+            <td class="order formset_td">
+                {{ item.product.price }}&nbspруб
+            </td>   
+            <td class="order formset_td">
+                x {{ item.quantity }} шт.
+            </td>   
+            <td class="order formset_td">
+                = {{ item.get_product_cost }}&nbspруб
+            </td>           
+        </tr>
+    {% endfor %}
+</table>
+   {% include 'ordersapp/includes/inc_order_actions.html' %}
+
+{% endblock %}
