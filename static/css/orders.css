@@ -1,0 +1,25 @@
+.order_container {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+.order_form {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+.my-btn-order {    
+    border-color: #23364e;
+    text-decoration: none;
+}
+
+.my-btn-link {
+    color:black;
+    text-decoration: none;
+}
+
+.my-btn-link:hover {
+    text-decoration: none;
+}
