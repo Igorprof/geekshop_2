@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}   
+{% include 'ordersapp/includes/inc_order_summary.html' %}
    <!-- <div class="basket_list">
     {% for item in object.orderitems.select_related %}
         <div class="basket_record">
@@ -22,7 +23,7 @@
         </div>
     {% endfor %}
 </div> -->
-    {% include 'ordersapp/includes/inc_order_summary.html' %}
+  
    <table class="table">
     {% for item in object.orderitems.select_related %}        
         <tr class="formset_row">                    
@@ -41,7 +42,7 @@
             </td>   
             <td class="order formset_td">
                 = {{ item.get_product_cost }}&nbspруб
-            </td>           
+            </td>        
         </tr>
     {% endfor %}
 </table>
