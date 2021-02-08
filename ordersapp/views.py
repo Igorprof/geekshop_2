@@ -132,8 +132,8 @@ def order_forming_complete(request, pk):
 
 @receiver(pre_save, sender=Basket)
 @receiver(pre_save, sender=OrderItem)
-def product_quaintity_update_save(sender, update_fileds, instance, **kwargs):
-    if update_fileds is 'quantity' or 'product':
+def product_quaintity_update_save(sender, update_fields, instance, **kwargs):
+    if update_fields is 'quantity' or 'product':
         if instance.pk:
             instance.product.quantity -= instance.quantity - sender.objects.get(pk=instance.pk).quantity
         else:
