@@ -1,0 +1,5 @@
+http://194.58.98.233/
+http://194.58.98.233/products/
+http://194.58.98.233/auth/profile/
+http://194.58.98.233/order/
+http://194.58.98.233/order/update/1/
