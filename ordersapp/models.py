@@ -37,6 +37,13 @@ class Order(models.Model):
         verbose_name_plural = 'заказы'
         ordering = ('-created_at', )
 
+    def get_summary(self):
+        _items = self.orderitems.select_related()
+        return {
+            'total_cost': sum(list(map(lambda x: x.quantity*x.product.price, _items))),
+            'total_quantity':  sum(list(map(lambda x: x.quantity, _items)))
+        }
+
     def get_total_quantity(self):
         _items = self.orderitems.select_related()
         _totalquantity = sum(list(map(lambda x: x.quantity, _items)))
