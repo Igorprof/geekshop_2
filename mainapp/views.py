@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 
 from django.conf import settings
 from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 
 def get_links_menu():
     if settings.LOW_CACHE:
@@ -44,6 +45,7 @@ def index(request):
     }
     return render(request, 'mainapp/index.html', context)
 
+@cache_page(3600)
 def products(request, category_id=None, page=1):
     if category_id:
         # products = Product.objects.filter(category_id=category_id).order_by('price')
