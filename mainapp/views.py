@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
+from django.db.models import Q
 
 def get_links_menu():
     if settings.LOW_CACHE:
@@ -52,6 +53,7 @@ def products(request, category_id=None, page=1):
         products = get_products_in_category_ordered_by_price(category_id)
     else:
         products = Product.objects.all()
+    # products = Product.objects.filter(Q(pk=1) | Q(pk=2)) # Использование или(берем первые два продукта)
     context = {
         'title': 'GeekShop - продукты',
         # 'categories': ProductCategory.objects.all(),

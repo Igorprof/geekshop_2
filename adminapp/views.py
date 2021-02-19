@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.management import call_command
 
 from authapp.models import User
 from mainapp.models import ProductCategory
@@ -132,6 +133,20 @@ class ProductCategoriesUpdateView(UpdateView):
     @method_decorator(user_passes_test(lambda user: user.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(ProductCategoriesUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        call_command('learn_db')
+        return data
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price = F('price') + (1 - discount/100))
+
+        return super().form_valid(form)
+
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def admin_product_categories_update(request, product_category_id):

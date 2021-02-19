@@ -25,9 +25,11 @@ class UserAdminProfileForm(UserProfileForm):
         self.fields['email'].widget.attrs['readonly'] = False
 
 class UserAdminCreateProductForm(forms.ModelForm):
+    discount = forms.IntegerField(label='Скидка', required=False, min_value=0, max_value=90, initial=0)
+
     class Meta:
         model = ProductCategory
-        fields = ('name', 'description')
+        fields = ('name', 'description', 'discount')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
